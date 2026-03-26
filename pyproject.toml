@@ -1,0 +1,44 @@
+[project]
+name = "easyrecon"
+version = "1.0.0"
+description = "Fast automated recon suite for bug bounty hunters and pentesters"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "unrealsrabon", url = "https://github.com/unrealsrabon"}
+]
+keywords = ["recon", "bugbounty", "pentesting", "security", "subdomain", "osint"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Security",
+]
+dependencies = [
+    "rich>=13.0.0",
+    "pyfiglet>=0.8.post1",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+easyrecon = "easyrecon:main"
+
+[project.urls]
+Homepage = "https://github.com/unrealsrabon/easyrecon"
+Repository = "https://github.com/unrealsrabon/easyrecon"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["easyrecon*", "utils*", "modules*"]

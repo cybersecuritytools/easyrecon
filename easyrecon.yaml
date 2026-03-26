@@ -1,0 +1,45 @@
+# easyrecon configuration
+# Place this file as ~/.easyrecon.yaml or ./easyrecon.yaml
+
+tools:
+  subfinder:
+    enabled: true
+    timeout: 120
+    extra_args: ""
+
+  amass:
+    enabled: true
+    timeout: 180
+    extra_args: ""
+
+  assetfinder:
+    enabled: true
+    timeout: 60
+    extra_args: ""
+
+  gau:
+    enabled: true
+    timeout: 120
+    extra_args: ""
+
+  waybackurls:
+    enabled: true
+    timeout: 90
+    extra_args: ""
+
+  katana:
+    enabled: true
+    timeout: 180
+    extra_args: ""
+
+  httpx:
+    enabled: true
+    timeout: 300
+    extra_args: ""
+
+settings:
+  output_dir: "./results"
+  threads: 50
+  save_raw: true
+  auto_install: true
+  default_timeout: 120

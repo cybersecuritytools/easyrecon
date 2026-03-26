@@ -1,0 +1,5 @@
+http://testphp.vulnweb.com/.well-known/ai-plugin.json
+http://testphp.vulnweb.com/.well-known/assetlinks.json
+http://testphp.vulnweb.com/.well-known/gpc.json
+http://testphp.vulnweb.com/http://testphp.vulnweb.cohttp://testphp.vulnwebhttp://testphp.vulnwhttp://testphp.vulnweb.com/vendor/installed.json
+http://testphp.vulnweb.com/vendor/installed.json
