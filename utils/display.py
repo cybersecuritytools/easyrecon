@@ -29,7 +29,7 @@ except ImportError:
 
 VERSION = "1.0.0"
 
-console = Console(color_system="256") if RICH_AVAILABLE else None
+console = Console(color_system="256", force_terminal=True, force_interactive=True) if RICH_AVAILABLE else None
 
 PHASE_COLORS = {
     "subdomain": "cyan",
