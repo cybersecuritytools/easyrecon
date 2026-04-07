@@ -19,12 +19,13 @@ DIM='\033[2m'
 NC='\033[0m'
 
 BANNER="
-  ___  ___  ____  _  _  ____  ___  _____  __ _
- | __|/ _ \/ ___|\ \/ /|  _ \| __||  ___||  \` |
- | _|| |_| \\___  \  / | |_) | _|  | |    | .  |
- |___|\___/ |___/ \\/  |____/|___| |_|    |_|\\_|
+ _____    _    ______   ______  _____ ____ ___  _   _ 
+| ____|  / \  / ___\ \ / /  _ \| ____/ ___/ _ \| \ | |
+|  _|   / _ \ \___ \\ V /| |_) |  _|| |  | | | |  \| |
+| |___ / ___ \ ___) || | |  _ <| |__| |__| |_| | |\  |
+|_____/_/   \_\____/ |_| |_| \_\_____\____\___/|_| \_|
 
-  installer v1.0.0 — by @unrealsrabon
+  installer v1.0.1 — by @unrealsrabon
 "
 
 GO_TOOLS=(
@@ -138,6 +139,9 @@ check_go() {
 install_go_tools() {
     print_step "Installing Go-based security tools..."
     echo ""
+
+    # Ensure Go binaries are found in PATH during current script execution
+    export PATH="$PATH:$HOME/go/bin"
 
     FAILED=()
 
