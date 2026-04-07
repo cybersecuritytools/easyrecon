@@ -1,3 +1,0 @@
-http://testphp.vulnweb.com/redir.php?r=https://bbs.pku.edu.cn/v2/jump-to.php?url=https://mangga69login.xyz
-http://testphp.vulnweb.com/redir.php?r=https://bbs.pku.edu.cn/v2/jump-to.php?url=https://tasteandflavours.com
-http://testphp.vulnweb.com/wp-json/wp/v2/users
