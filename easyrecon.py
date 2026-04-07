@@ -60,7 +60,8 @@ def setup_signal_handler() -> None:
 		print_interrupt()
 		if _current_output_dir and _current_output_dir.exists():
 			print_info(f"Partial results saved to: {_current_output_dir}")
-		sys.exit(0)
+		import os
+		os._exit(1)
 
 	signal.signal(signal.SIGINT, _handler)
 
