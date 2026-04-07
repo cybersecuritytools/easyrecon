@@ -27,7 +27,7 @@ try:
 except ImportError:
     PYFIGLET_AVAILABLE = False
 
-VERSION = "1.0.0"
+VERSION = "1.0.4"
 
 console = Console(color_system="256", force_terminal=True, force_interactive=True) if RICH_AVAILABLE else None
 
@@ -116,15 +116,30 @@ def print_phase_header(phase: str) -> None:
 
 from contextlib import contextmanager
 
+def get_spinner_message(tools: List[str], target_type: str, target: str) -> str:
+    """Generate dynamic grammar and contextual sentences for the loading spinner."""
+    tools_str = ", ".join(tools)
+    verb = "is" if len(tools) == 1 else "are"
+    
+    if target_type == "subdomains":
+        return f"[cyan][bold]{tools_str}[/bold] {verb} running to find out every possible subdomain of [bold]{target}[/bold]...[/cyan]"
+    elif target_type == "urls":
+        return f"[cyan][bold]{tools_str}[/bold] {verb} running to find out every possible url of [bold]{target}[/bold]...[/cyan]"
+    elif target_type == "live_subdomains":
+        return f"[cyan][bold]{tools_str}[/bold] {verb} probing the discovered subdomains of [bold]{target}[/bold] to find live web servers...[/cyan]"
+    elif target_type == "live_urls":
+        return f"[cyan][bold]{tools_str}[/bold] {verb} validating the discovered URLs of [bold]{target}[/bold] to sort out active endpoints...[/cyan]"
+    
+    return f"[cyan][bold]{tools_str}[/bold] {verb} running on [bold]{target}[/bold]...[/cyan]"
+
 @contextmanager
-def print_live_tools_spinner(tools: List[str]):
+def print_live_tools_spinner(tools: List[str], target_type: str = "targets", target: str = ""):
     """Display a live spinner while tools are running in the background."""
     if not RICH_AVAILABLE or not tools:
-        yield
+        yield None
         return
 
-    tools_str = ", ".join(tools)
-    status_msg = f"[cyan]Running tools in parallel: [bold]{tools_str}[/bold]... please wait[/cyan]"
+    status_msg = get_spinner_message(tools, target_type, target)
     with console.status(status_msg, spinner="dots") as status:
         yield status
 def print_tool_result(

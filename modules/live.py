@@ -72,7 +72,7 @@ def _probe_subdomains(
 
     timeout = config.get_tool_timeout("httpx")
     
-    with print_live_tools_spinner(["httpx (subdomains)"]):
+    with print_live_tools_spinner(["httpx (subdomains)"], "live hosts"):
         try:
             start = time.time()
             result = subprocess.run(
@@ -129,7 +129,7 @@ def _filter_live_urls(
 
     timeout = config.get_tool_timeout("httpx")
 
-    with print_live_tools_spinner(["httpx (urls)"]):
+    with print_live_tools_spinner(["httpx (urls)"], "live urls"):
         try:
             start = time.time()
             result = subprocess.run(

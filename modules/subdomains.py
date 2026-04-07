@@ -13,7 +13,7 @@ from utils.runner import run_tool, ToolResult, CriticalToolMissing
 from utils.merger import merge_and_dedupe, save_to_file, filter_subdomains_for_target
 from utils.display import (
     print_phase_header, print_tool_result, print_live_tools_spinner,
-    print_warning, print_counter, print_phase_skip,
+    print_warning, print_counter, print_phase_skip, get_spinner_message,
 )
 from utils.registry import PHASE_TOOLS
 
@@ -49,22 +49,30 @@ def run_subdomain_phase(
         return [], False
 
     results: Dict[str, List[str]] = {}
+    active_tools = enabled_tools.copy()
 
-    with ThreadPoolExecutor(max_workers=len(enabled_tools)) as executor:
-        futures = {
-            executor.submit(run_tool, tool_name, target, config): tool_name
-            for tool_name in enabled_tools
-        }
-
-        active_tools = enabled_tools.copy()
-        
-        with print_live_tools_spinner(active_tools) as status:
+    with print_live_tools_spinner(active_tools, "subdomains", target) as status:
+        time.sleep(0.1)  # Allow UI thread to paint initial animation
+        with ThreadPoolExecutor(max_workers=len(enabled_tools)) as executor:
+            futures = {
+                executor.submit(run_tool, tool_name, target, config): tool_name
+                for tool_name in enabled_tools
+            }
+    
             for future in as_completed(futures):
                 tool_name = futures[future]
                 
                 try:
                     result: ToolResult = future.result()
                     results[tool_name] = result.lines
+    
+                    # Update state BEFORE printing tool result so spinner correctly reflects remaining tools
+                    active_tools.remove(tool_name)
+                    if status:
+                        if active_tools:
+                            status.update(f"[cyan][bold]{', '.join(active_tools)}[/bold] are running to find out every possible subdomains on the internet...[/cyan]")
+                        else:
+                            status.update("[cyan]Finalizing...[/cyan]")
     
                     print_tool_result(
                         tool_name=tool_name,
@@ -73,10 +81,6 @@ def run_subdomain_phase(
                         elapsed=result.elapsed,
                         message=result.message,
                     )
-                    
-                    active_tools.remove(tool_name)
-                    if status and active_tools:
-                        status.update(f"[cyan]Running tools in parallel: [/cyan][bold]{', '.join(active_tools)}[/bold][cyan]... please wait[/cyan]")
     
                     if config.save_raw and result.lines:
                         save_to_file(result.lines, raw_dir / f"{tool_name}.txt")
@@ -89,8 +93,11 @@ def run_subdomain_phase(
                     results[tool_name] = []
                     if tool_name in active_tools:
                         active_tools.remove(tool_name)
-                    if status and active_tools:
-                        status.update(f"[cyan]Running tools in parallel: [/cyan][bold]{', '.join(active_tools)}[/bold][cyan]... please wait[/cyan]")
+                    if status:
+                        if active_tools:
+                            status.update(f"[cyan][bold]{', '.join(active_tools)}[/bold] are running to find out every possible subdomains on the internet...[/cyan]")
+                        else:
+                            status.update("[cyan]Finalizing...[/cyan]")
 
     all_subs = merge_and_dedupe(results)
     filtered = filter_subdomains_for_target(all_subs, target)
