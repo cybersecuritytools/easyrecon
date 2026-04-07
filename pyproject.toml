@@ -1,6 +1,6 @@
 [project]
 name = "easyrecon"
-version = "1.0.0"
+version = "1.7"
 description = "Fast automated recon suite for bug bounty hunters and pentesters"
 readme = "README.md"
 requires-python = ">=3.8"

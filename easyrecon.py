@@ -45,7 +45,7 @@ from modules.live import run_live_phase
 from modules.categorize import run_categorize_phase
 from modules.report import run_report_phase
 
-VERSION = "1.0.0"
+VERSION = "1.7"
 
 _current_output_dir: Optional[Path] = None
 _collected_subdomains: List[str] = []

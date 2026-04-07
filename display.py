@@ -27,7 +27,7 @@ try:
 except ImportError:
     PYFIGLET_AVAILABLE = False
 
-VERSION = "1.6"
+VERSION = "1.7"
 
 console = Console(color_system="256", force_terminal=True, force_interactive=True) if RICH_AVAILABLE else None
 
