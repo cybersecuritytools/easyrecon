@@ -5,7 +5,7 @@
   <p><strong>The recon command you run before anything else.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/version-1.0.2-0ea5e9?style=for-the-badge&labelColor=f8fafc&color=0ea5e9" alt="Version" />
+    <img src="https://img.shields.io/badge/version-1.4-0ea5e9?style=for-the-badge&labelColor=f8fafc&color=0ea5e9" alt="Version" />
     <img src="https://img.shields.io/badge/build-passing-10b981?style=for-the-badge&labelColor=f8fafc&color=10b981" alt="Build" />
     <img src="https://img.shields.io/badge/license-MIT-64748b?style=for-the-badge&labelColor=f8fafc&color=64748b" alt="License" />
   </p>
