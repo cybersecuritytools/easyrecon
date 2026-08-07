@@ -125,8 +125,8 @@ Once setup and scanning are finished, `easyrecon` delivers precisely what you ne
 
 ### 2. Install
 ```bash
-git clone https://github.com/cybersecuritytools/easyrecon
-cd easyrecon
+git clone https://github.com/easyrecon_legacy
+cd easyrecon_legacy
 chmod +x install.sh
 ./install.sh
 ```
