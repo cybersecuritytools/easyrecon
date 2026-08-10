@@ -1,371 +1,156 @@
 <div align="center">
+  <br />
+  <img src="https://api.iconify.design/lucide/scan-line.svg?color=%230ea5e9" width="56" alt="radar" />
+  <h1>E A S Y R E C O N</h1>
+  <p><strong>The recon command you run before anything else.</strong></p>
 
+  <p>
+    <img src="https://img.shields.io/badge/version-1.7-0ea5e9?style=for-the-badge&labelColor=f8fafc&color=0ea5e9" alt="Version" />
+    <img src="https://img.shields.io/badge/build-passing-10b981?style=for-the-badge&labelColor=f8fafc&color=10b981" alt="Build" />
+    <img src="https://img.shields.io/badge/license-MIT-64748b?style=for-the-badge&labelColor=f8fafc&color=64748b" alt="License" />
+  </p>
 
-```
- ___  __ _ ___ _   _ _ __ ___  ___ ___  _ __
-/ _ \/ _` / __| | | | '__/ _ \/ __/ _ \| '_ \
-|  __/ (_| \__ \ |_| | | |  __/ (_| (_) | | | |
-\___|\__,_|___/\__, |_|  \___|\___\___/|_| |_|
-                |___/   reconnaissance framework
-```
-
-# easyrecon
-
-**One command turns a domain into a fully mapped, categorized attack surface.**
-
-`easyrecon target.com`, and the industry-standard recon toolchain runs for you, in parallel, with the output already organized for hunting.
-
-<br>
-
-![Made with Go](https://img.shields.io/badge/made%20with-Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
-![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macOS-333333?style=for-the-badge)
-![Single Binary](https://img.shields.io/badge/deploy-single%20binary-success?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-64748b?style=for-the-badge)
 
 </div>
 
----
 
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/refresh-cw.svg" width="22" valign="middle"> A rebuilt version, not an update
+> **Stop wasting the first hour of every engagement setting up your tools.**  
+> `easyrecon` strips away the friction. Run one command, get a perfectly categorized attack surface, and jump straight into hunting. 
 
-easyrecon began as a Python tool. It worked, but it had a ceiling: Python's threading model does not give true parallel execution for this kind of workload, startup time added up across every run, and distributing it meant asking every user to manage a Python environment and a list of pip dependencies before they could run a single scan.
+<br />
 
-This version is a full rewrite in Go. The feature set and philosophy carry over, one command, fully categorized output, but the foundation underneath it is different in ways that directly affect how it performs on a real engagement.
+## <img src="https://api.iconify.design/lucide/flame.svg?color=%23ef4444" width="28" align="top" /> The Crucial Question: Why *Must* You Use EasyRecon?
 
-<table>
-<tr>
-<th align="left" width="20%">Area</th>
-<th align="left" width="40%">Python version (legacy)</th>
-<th align="left" width="40%">Go version (current)</th>
-</tr>
-<tr valign="top">
-<td><b>Distribution</b></td>
-<td>Requires Python 3.8 or newer, a virtual environment, and installed pip dependencies before first use</td>
-<td>Ships as a single compiled binary. No interpreter, no dependency installation, no environment to manage</td>
-</tr>
-<tr valign="top">
-<td><b>Concurrency</b></td>
-<td>Threaded, constrained by Python's global interpreter lock during CPU-bound work</td>
-<td>Runs tools as true concurrent processes using goroutines, with real parallel execution across CPU cores</td>
-</tr>
-<tr valign="top">
-<td><b>Startup and runtime</b></td>
-<td>Interpreter startup and library import overhead on every invocation</td>
-<td>Starts immediately as native compiled code</td>
-</tr>
-<tr valign="top">
-<td><b>Tool integration</b></td>
-<td>Fixed set of phases, extending the tool list meant editing the source</td>
-<td>Fully config driven through a YAML file, new tools are added without touching any code</td>
-</tr>
-<tr valign="top">
-<td><b>URL deduplication</b></td>
-<td>Basic sort and unique operation on raw URL text</td>
-<td>Normalizes host case, default ports, query parameter order, and trailing slashes before deduplicating, so equivalent URLs are correctly merged</td>
-</tr>
-<tr valign="top">
-<td><b>JavaScript analysis</b></td>
-<td>Listed discovered JavaScript file URLs</td>
-<td>Fetches JavaScript file contents directly and scans them for embedded secrets and hidden API endpoints</td>
-</tr>
-<tr valign="top">
-<td><b>Interrupt handling</b></td>
-<td>Standard process termination</td>
-<td>Terminates the full process tree on interrupt, writes results atomically, and preserves partial output</td>
-</tr>
+Most hunters waste hours running tools one by one, manually filtering out dead domains, and losing track of juicy endpoints in massive text files. **EasyRecon completely eliminates this bottleneck.** 
+
+<br />
+
+<table width="100%">
+  <tr>
+    <th width="50%" align="center" style="font-size: 1.2em; color: #ef4444;">❌ The Old Way (Manual)</th>
+    <th width="50%" align="center" style="font-size: 1.2em; color: #10b981;">✅ The EasyRecon Way</th>
+  </tr>
+  <tr>
+    <td valign="top">
+      <ul>
+        <li>Run `subfinder`, wait to finish</li>
+        <li>Run `amass`, wait to finish</li>
+        <li>Manually concatenate and `sort -u`</li>
+        <li>Run `httpx` to find live hosts</li>
+        <li>Run `gau` & `waybackurls`</li>
+        <li>Get a 5GB text file of random URLs</li>
+        <li>Spend 2 hours searching for `?id=` or `/admin`</li>
+      </ul>
+    </td>
+    <td valign="top">
+      <ul>
+        <li>Run `easyrecon target.com`</li>
+        <li>Go grab a cup of coffee ☕</li>
+        <li>Return to a fully weaponized, neatly categorized workspace</li>
+        <li>Instantly open the `high-priority-admin.txt` vault</li>
+        <li><strong>Start hacking immediately</strong></li>
+      </ul>
+    </td>
+  </tr>
 </table>
 
-The result is a tool that starts faster, uses genuine parallelism instead of simulated concurrency, and installs as one file instead of a dependency chain. This is the version recommended for all new use. The Python release remains archived for reference only and is no longer maintained.
+<br />
 
----
+## <img src="https://api.iconify.design/lucide/gem.svg?color=%238b5cf6" width="28" align="top" /> Every Benefit, Broken Down
 
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/info.svg" width="22" valign="middle"> What it does
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h3><img src="https://api.iconify.design/lucide/timer.svg?color=%233b82f6" width="24" align="top"/> Unmatched Speed</h3>
+      <p>By leveraging intelligent multi-threading and asynchronous orchestration, we run industry-standard tools in parallel. What used to take hours now takes minutes. You are always the first to start testing on new targets.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3><img src="https://api.iconify.design/lucide/brain-circuit.svg?color=%2310b981" width="24" align="top"/> Smart Categorization</h3>
+      <p>EasyRecon doesn't just dump raw data. It analyzes every single URL and categorizes them into actionable buckets: APIs, Admin Panels, Sensitive Exposures, and Injectable Parameters.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><img src="https://api.iconify.design/lucide/shield-check.svg?color=%23f59e0b" width="24" align="top"/> Zero Blind Spots</h3>
+      <p>By overlapping capabilities of 7+ premier security tools (Subfinder, Amass, Katana, GAU, HTTPX, etc.), we ensure that if an endpoint exists, EasyRecon will find it. Maximum coverage guaranteed.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3><img src="https://api.iconify.design/lucide/sliders-horizontal.svg?color=%23ef4444" width="24" align="top"/> Highly Customizable</h3>
+      <p>Want to add your own secret internal tool? EasyRecon's modular architecture lets you hook in custom scripts and binaries natively through a simple YAML configuration.</p>
+    </td>
+  </tr>
+</table>
 
-Reconnaissance against a target typically means running a series of tools by hand: subdomain enumeration, DNS resolution, live host probing, URL discovery from multiple sources, and then manually sorting the results to find anything worth investigating. Done manually, this takes an hour or more and is easy to get inconsistent between targets.
+<br />
 
-easyrecon runs that entire sequence as a single pipeline. Tools within each stage run in parallel, results are merged and deduplicated between stages, and the final output is already sorted into categories such as admin panels, API endpoints, authentication flows, and exposed configuration files. The result is a folder that is ready to work from the moment the scan finishes.
+## <img src="https://api.iconify.design/lucide/network.svg?color=%233b82f6" width="28" align="top" /> The Orchestration Pipeline
 
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/git-merge.svg" width="22" valign="middle"> Pipeline
-
-easyrecon executes as a sequence of phases. Every tool inside a phase runs concurrently, bounded by a configurable concurrency limit. Between phases, results are merged, normalized, filtered to scope, and deduplicated before being passed to the next stage.
+Visualizing the automated magic:
 
 ```mermaid
 flowchart TD
-    A["easyrecon target.com"] --> B
-    subgraph P1["Phase 1: Subdomain Enumeration (parallel)"]
-        B["subfinder, assetfinder, amass, findomain"]
-    end
-    B --> C["Merge, scope filter, deduplicate<br/>subdomains/all.txt"]
-    C --> D
-    subgraph P2["Phase 2: DNS Resolution"]
-        D["dnsx removes unresolvable subdomains"]
-    end
-    D --> E["subdomains/resolved.txt"]
-    E --> F
-    subgraph P3["Phase 3: HTTP Probing"]
-        F["httpx confirms live hosts"]
-    end
-    F --> G["live/alive.txt"]
-    G --> H
-    subgraph P4["Phase 4: URL Discovery (parallel)"]
-        H["gau, waybackurls, katana, gospider, hakrawler"]
-    end
-    H --> I["Merge, normalize, deduplicate<br/>urls/all-urls.txt"]
-    I --> J["Phase 5: Categorization<br/>admin, api, auth, sensitive, and more"]
-    J --> K["Phase 6: JavaScript Mining<br/>fetch every .js file, extract secrets and endpoints"]
-    K --> L["Summary: terminal panel, summary.txt, summary.json"]
-    style A fill:#00ADD8,stroke:#007d9c,color:#fff
-    style L fill:#22863a,stroke:#176f2c,color:#fff
-    style C fill:#2d2d2d,stroke:#555,color:#fff
-    style E fill:#2d2d2d,stroke:#555,color:#fff
-    style G fill:#2d2d2d,stroke:#555,color:#fff
-    style I fill:#2d2d2d,stroke:#555,color:#fff
+    classDef primary fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a,font-weight:bold
+    classDef secondary fill:#f8fafc,stroke:#94a3b8,stroke-width:1px,stroke-dasharray: 5 5
+
+    Input((Target Domain)):::primary --> Subdomains[Subdomain Enumeration]:::primary
+    
+    Subdomains --> |Amass, Subfinder, Assetfinder| LiveHosts[Live Host Verification]:::primary
+    LiveHosts --> |HTTPX| Crawling[Deep Crawling & History]:::primary
+    
+    Crawling --> |Katana, GAU, Waybackurls| Analysis[Smart Analysis Engine]:::primary
+    
+    Analysis --> High[🚨 High Priority & Amin Targets]:::primary
+    Analysis --> Med[🔌 APIs & Parameters]:::primary
+    Analysis --> Low[ℹ️ Informational & Asset Files]:::primary
 ```
 
-A few properties of the pipeline are worth calling out:
+<br />
 
-- **Parallel within a phase.** All four subdomain tools run at the same time. All five URL discovery tools run at the same time. No stage waits on another tool that could be running concurrently.
-- **Deduplication that understands URLs.** Rather than a plain text sort, URLs are normalized first: hosts are lowercased, default ports are stripped, query parameters are sorted, and fragments are trimmed. Two URLs that differ only in formatting are correctly recognized as one.
-- **Scope filtering.** Passive sources occasionally return out-of-scope hosts. These are filtered out before further processing so scans stay within the intended target.
-- **Fault tolerant.** If a tool times out or fails, its partial output is preserved and the pipeline continues. A tool that is not installed is skipped rather than treated as an error.
+## <img src="https://api.iconify.design/lucide/folders.svg?color=%233b82f6" width="28" align="top" /> Contextual Outcomes
 
----
+Once setup and scanning are finished, `easyrecon` delivers precisely what you need, neatly organized. Focus on what matters:
 
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/folder.svg" width="22" valign="middle"> Output structure
+* 🚨 **`/results/target.com/admin_panels.txt`** — Direct links to login gates.
+* 🔑 **`/results/target.com/secrets_and_config.txt`** — `.env`, `.git`, configurations.
+* 🔌 **`/results/target.com/api_endpoints.txt`** — Undocumented GraphQL / REST endpoints.
+* 💉 **`/results/target.com/injectable_parameters.txt`** — URLs ready for XSS, SQLi, and SSRF payloads.
 
-Every scan produces a single, predictable folder layout:
+<br />
 
-```
-results/target.com/
-├── summary.txt              overview of counts and file locations
-├── summary.json             the same summary in machine readable form
-│
-├── subdomains/
-│   ├── all.txt               every unique subdomain found, in scope
-│   └── resolved.txt          the subset that resolves in DNS
-│
-├── live/
-│   ├── alive.txt             live URLs with scheme
-│   └── hosts.txt             live hostnames only
-│
-├── urls/
-│   ├── all-urls.txt          every unique URL found, normalized
-│   └── categorized/
-│       ├── sensitive.txt     exposed .env, .git, backups, keys, configs
-│       ├── admin.txt         admin panels and management dashboards
-│       ├── auth.txt          login, oauth, sso, and password reset flows
-│       ├── api.txt           REST, GraphQL, and documented API endpoints
-│       ├── upload.txt        file upload and media endpoints
-│       ├── docs-debug.txt    actuator, phpinfo, debug, and metrics endpoints
-│       ├── suspicious.txt    parameters that suggest redirect, SSRF, or LFI risk
-│       ├── params.txt        URLs carrying query parameters, useful for fuzzing
-│       └── js.txt            every discovered JavaScript file
-│
-├── js/
-│   ├── js-urls.txt           JavaScript files selected for content analysis
-│   ├── secrets.txt           credentials and tokens found inside JavaScript
-│   └── endpoints.txt         API paths extracted from JavaScript source
-│
-├── raw/                      unmodified output from each individual tool
-│   ├── subs/  urls/  js/  misc/
-│
-└── logs/                     per-tool execution logs
-```
+## <img src="https://api.iconify.design/lucide/rocket.svg?color=%233b82f6" width="28" align="top" /> Quick Start
 
-Nothing needs to be located manually, and nothing needs to be re-deduplicated by hand. The `sensitive.txt` and `js/secrets.txt` files are typically the first two worth opening.
+### 1. Requirements
+* Python 3.8+
+* Go *(needed to easily grab the underlying tools)*
 
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/code.svg" width="22" valign="middle"> JavaScript mining
-
-Modern applications routinely embed information in their JavaScript that is not visible anywhere else: internal API paths, staging URLs, and occasionally hardcoded credentials that were never meant to ship to a browser.
-
-easyrecon fetches every discovered JavaScript file directly, subject to concurrency limits, timeouts, and a size cap, and scans the actual file contents rather than just listing the URLs. It looks for two categories of findings:
-
-- **Secrets.** Sixteen high-confidence patterns covering AWS keys, Google API keys, Slack tokens and webhooks, GitHub and GitLab tokens, Stripe keys, JWTs, private key blocks, Twilio, SendGrid, Mailgun, Firebase URLs, and a generic API key pattern. The pattern set is tuned for signal over volume.
-- **Endpoints.** Paths and full URLs referenced in the code that would not appear in any crawler's output because they are only constructed at runtime.
-
-If the dedicated JavaScript discovery tool finds nothing, easyrecon falls back to every JavaScript file already discovered during URL enumeration, so this stage still produces results even when that tool comes up empty. Like the rest of the pipeline, JavaScript mining is best-effort: if it fails for any reason, the core recon results already written to disk are unaffected.
-
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/download-cloud.svg" width="22" valign="middle"> Installation
-
-### From the repository
-
+### 2. Install
 ```bash
-git clone https://github.com/unrealsrabon/easyrecon.git
-cd easyrecon
+git clone https://github.com/easyrecon_legacy
+cd easyrecon_legacy
+chmod +x install.sh
 ./install.sh
 ```
 
-`install.sh` detects the operating system and CPU architecture, then selects the most appropriate install method:
-
-1. Build from source, if Go and the repository are both present
-2. `go install`, if Go is available but the repository is not
-3. Download a prebuilt binary matching the platform, otherwise
-
-The binary is placed in `/usr/local/bin`, or `~/.local/bin` if that location is not writable, and the script reports if that directory is not on the system `PATH`. Behavior can be adjusted with environment variables:
-
+### 3. Usage & Examples
 ```bash
-INSTALL_DIR=~/bin ./install.sh                 # install to a specific directory
-METHOD=download VERSION=v1.0.0 ./install.sh    # install a specific release
-NO_SUDO=1 ./install.sh                          # never request elevated privileges
+# Kick off a full orchestration
+easyrecon target.com
+
+# Go aggressive with threads
+easyrecon target.com --threads 100 --output ~/bugbounty_vault
+
+# Run only specific modules 
+easyrecon target.com --phase enum
+
+# For help
+easyrecon --help
 ```
 
-### With Make
+<br />
 
-```bash
-make install      # build and install to ~/.local/bin
-make uninstall     # remove the installed binary
-```
+## <img src="https://api.iconify.design/lucide/book-open-check.svg?color=%233b82f6" width="24" align="top" /> Legal & License
 
-### First run
+**Disclaimer:** Only point `easyrecon` at assets you own or possess explicit, written permission to test. Unauthorized scanning is actionable and illegal.
 
-```bash
-easyrecon example.com
-```
-
-On first use, easyrecon checks for the recon tools it depends on and installs any that are missing, using whichever package manager fits each tool. To disable this behavior and rely only on what is already installed, pass `--no-install`.
-
-To review installed and missing tools without starting a scan:
-
-```bash
-easyrecon check
-```
-
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/layers.svg" width="22" valign="middle"> Tools orchestrated
-
-easyrecon does not replace the established recon toolchain. It coordinates it. Every tool listed below is widely used and independently maintained.
-
-| Phase | Tools | Purpose |
-|---|---|---|
-| Subdomain enumeration | subfinder, assetfinder, amass, findomain | Passive subdomain discovery across certificate transparency logs and dozens of external sources |
-| DNS resolution | dnsx | Confirms which subdomains resolve and discards the rest |
-| HTTP probing | httpx | Determines which resolved hosts are actively serving HTTP or HTTPS |
-| URL discovery | gau, waybackurls, katana, gospider, hakrawler | Combines historical URL archives with live, JavaScript-aware crawling |
-| JavaScript analysis | subjs, plus a built-in content mining engine | Locates JavaScript files and extracts secrets and endpoints from their contents |
-
-Two additional tools ship disabled by default because they require API credentials: `github-subdomains`, which needs a GitHub token, and `waymore`, which requires a Python environment. Both can be enabled once credentials are configured.
-
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/settings.svg" width="22" valign="middle"> Configuration and extensibility
-
-The tool list is not hardcoded. It is defined entirely in a YAML configuration file, which means adding a new tool does not require modifying the application at all.
-
-```yaml
-- name: my-new-tool
-  binary: my-new-tool
-  phase: subdomain          # subdomain | resolve | probe | url | jsmine
-  input: target              # target | stdin | file
-  output: stdout              # stdout | file
-  args: ["-d", "{{TARGET}}", "-silent"]
-  timeout: 300
-  enabled: true
-  install:
-    - type: go
-      cmd: "go install github.com/you/my-new-tool@latest"
-```
-
-Placeholders such as `{{TARGET}}`, `{{INPUT}}`, `{{OUTPUT}}`, `{{THREADS}}`, and `{{RATE}}` are substituted at runtime. Categorization rules and secret detection patterns are defined the same way, in a separate `categories.yaml` file.
-
-Editable copies of both configuration files can be generated with:
-
-```bash
-easyrecon config init
-```
-
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/shield.svg" width="22" valign="middle"> Reliability
-
-easyrecon is built to behave predictably during real engagements, including ones that run for a long time or get interrupted partway through.
-
-<table>
-<tr>
-<td width="60" align="center"><img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/lock.svg" width="24"></td>
-<td><b>No shell injection.</b> Tools are launched with argument arrays, never by building shell strings. A target value cannot be used to inject additional commands.</td>
-</tr>
-<tr>
-<td align="center"><img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/x-octagon.svg" width="24"></td>
-<td><b>Clean interruption.</b> Stopping a scan terminates the entire process tree, leaving no orphaned tool processes running afterward. Partial results are saved before exit.</td>
-</tr>
-<tr>
-<td align="center"><img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/cpu.svg" width="24"></td>
-<td><b>Streaming deduplication.</b> URL sets are deduplicated as a stream rather than loaded fully into memory, so large targets do not exhaust available RAM.</td>
-</tr>
-<tr>
-<td align="center"><img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/maximize-2.svg" width="24"></td>
-<td><b>Handles oversized input.</b> A sixteen megabyte line buffer allows parsing of large, minified single-line JavaScript bundles without failure.</td>
-</tr>
-</table>
-
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/terminal.svg" width="22" valign="middle"> Command reference
-
-```
-easyrecon <target>                 run the full pipeline
-easyrecon run [flags] <target>     run the pipeline with explicit flags
-easyrecon check                    show which required tools are installed
-easyrecon config init [--force]    write editable configuration files
-easyrecon version                  print the current version
-```
-
-**Flags for `run`**
-
-| Flag | Description | Default |
-|---|---|---|
-| `--output <dir>` | Directory results are written to | `results` |
-| `--concurrency <n>` | Maximum tools running at once | based on CPU count |
-| `--threads <n>` | Threads passed to each tool | `25` |
-| `--rate <n>` | Requests per second, per tool | `150` |
-| `--no-install` | Disable automatic installation of missing tools | off |
-| `--tools <path>` | Use a custom tools configuration file | embedded default |
-| `--categories <path>` | Use a custom categories configuration file | embedded default |
-| `--verbose` | Enable detailed logging | off |
-| `--quiet` | Log errors only | off |
-| `--no-color` | Disable colored output | off |
-
-```bash
-easyrecon run --verbose --concurrency 5 example.com
-```
-
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/box.svg" width="22" valign="middle"> Technical foundation
-
-easyrecon is written in Go, compiled to a single static binary that requires no runtime and starts instantly. It has one external dependency, `gopkg.in/yaml.v3`, used for configuration parsing. Every other component uses the Go standard library. Supported platforms are Linux and macOS.
-
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/map.svg" width="22" valign="middle"> Status and roadmap
-
-The pipeline, parallel execution, normalization and deduplication, categorization, JavaScript mining, automatic tool installation, and clean shutdown handling are complete and in active use today.
-
-Planned next:
-
-- **Resume from checkpoint.** Re-running a scan should skip phases that already completed. The state tracking required for this is in place; the resume logic itself is not yet wired in.
-- **First-class credentialed tool support.** Clean, guided setup for `github-subdomains` and `waymore` once key management is finalized.
-- **Expanded categorization and secret patterns.** This list will continue to grow as new patterns and endpoint types are identified.
-
----
-
-## <img src="https://raw.githubusercontent.com/feathericons/feather/master/icons/book-open.svg" width="22" valign="middle"> Responsible use
-
-easyrecon is intended for authorized testing only, against assets you own or have explicit written permission to test. Passive enumeration is low impact, but active crawling and JavaScript fetching do generate traffic against the target. Running this tool against a target without authorization is unlawful in most jurisdictions and falls outside the intended use of this project.
-
----
-
-## License
-
-Released under the MIT License. Developed by [unrealsrabon](https://github.com/unrealsrabon), and continues the earlier Python-based EasyRecon project, which remains available for reference but is no longer maintained.
-
-<div align="center">
-<sub><b>easyrecon.</b> One command, every recon tool, one organized result.</sub>
-</div>
+Released under the **MIT License**.  
+Crafted by [@unrealsrabon](https://github.com/unrealsrabon) — part of the [@ai-will-replace-developers](https://github.com/ai-will-replace-developers) initiative.
